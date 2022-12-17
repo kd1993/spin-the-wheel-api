@@ -2,18 +2,14 @@ const express = require('express');
 const app = express();
 const http = require('http');
 const server = http.createServer(app);
-const { Server } = require("socket.io");
-const io = new Server(server);
 
-app.use((req, res, next) => {
-    res.header('Access-Control-Allow-Origin', '*');
-    res.header(
-      'Access-Control-Allow-Headers',
-      'origin, X-Requested-With,Content-Type,Accept, Authorization'
-    );
-  
-    next();
-  });
+const { Server } = require("socket.io");
+
+const io = new Server(http, {
+  cors: {
+    origin: "*",
+  },
+});
 
 app.get('/', (req, res) => {
     res.sendFile(__dirname + '/index.html');
