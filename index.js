@@ -1,34 +1,29 @@
-const express = require('express');
+const express = require("express");
 const app = express();
-const http = require('http');
-const server = http.createServer(app);
-
+const http = require("http").Server(app);
 const { Server } = require("socket.io");
-
 const io = new Server(http, {
   cors: {
     origin: "*",
   },
 });
 
-app.get('/', (req, res) => {
-    res.sendFile(__dirname + '/index.html');
-});
+const port = process.env.PORT || 3000;
 
-io.on('connection', (socket) => {
+app.use(express.static(__dirname + "/public"));
 
-    socket.on('start-spin', (users) => {
-        spinnerWheel.startSpin(users);
-        var user = users[Math.floor(Math.random() * users.length)];
-        socket.emit('winner-selected', user);
-    });
+function onConnection(socket) {
+  socket.on('start-spin', (users) => {
+    spinnerWheel.startSpin(users);
+      var user = users[Math.floor(Math.random() * users.length)];
+     socket.emit('winner-selected', user);
+   });
 
-    socket.on('disconnect', () => {
-        console.log('user disconnected');
-    });
-});
+  socket.on('disconnect', () => {
+    console.log('user disconnected');
+  });
+}
 
+io.on("connection", onConnection);
 
-server.listen(3000, () => {
-    console.log('listening on *:3000');
-});
+http.listen(port, () => console.log("listening on port " + port));
