@@ -1,1 +1,1 @@
-# spinTheWheelApi
+# SpinTheWheelApi
