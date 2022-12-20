@@ -13,11 +13,17 @@ const port = process.env.PORT || 3000;
 app.use(express.static(__dirname + "/public"));
 
 function onConnection(socket) {
-  socket.on('start-spin', (users) => {
-    spinnerWheel.startSpin(users);
-      var user = users[Math.floor(Math.random() * users.length)];
-     socket.emit('winner-selected', user);
-   });
+  socket.on('start-spin', (userId, users, conferenceId) => {
+    console.info('Start spin event received', userId, users, conferenceId);
+    // send the event for all the users.
+    socket.broadcast.emit('spin-started', userId, conferenceId);
+  });
+
+  socket.on('winner-picked', (userId, user, conferenceId) => {
+    console.info('============');
+    console.info('the winner', user);
+    socket.broadcast.emit('winner-selected', userId, user, conferenceId);
+  })
 
   socket.on('disconnect', () => {
     console.log('user disconnected');
