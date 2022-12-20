@@ -1,13 +1,13 @@
 {
   "name": "merntaskserver",
   "version": "1.0.0",
-  "description": "MERN API for MERN TASKS",
+  "description": "API for spin the heel for comm.land",
   "main": "index.js",
   "scripts": {
     "start": "node .",
     "dev": "nodemon ."
   },
-  "author": "Alex Navarro",
+  "author": "Kevin Damas",
   "license": "ISC",
   "devDependencies": {
     "nodemon": "^2.0.4"
