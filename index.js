@@ -1,4 +1,3 @@
-
 const express = require("express");
 const app = express();
 const http = require("http").Server(app);
@@ -14,7 +13,19 @@ const port = process.env.PORT || 3000;
 app.use(express.static(__dirname + "/public"));
 
 function onConnection(socket) {
-  socket.on("whiteboard", (data) => socket.broadcast.emit("whiteboard", data));
+  socket.on('start-spin', (userId, users, conferenceId) => {
+    console.info('Start spin event received', userId, users, conferenceId);
+    // send the event for all the users.
+    socket.broadcast.emit('spin-started', userId, conferenceId);
+  });
+
+  socket.on('winner-picked', (userId, user, conferenceId) => {
+    socket.broadcast.emit('winner-selected', userId, user, conferenceId);
+  })
+
+  socket.on('disconnect', () => {
+    console.log('user disconnected');
+  });
 }
 
 io.on("connection", onConnection);
